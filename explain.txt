@@ -1,0 +1,137 @@
+Fonctions autorises:
+
+socket, close, setsockopt, getsockname, getprotobyname, gethostbyname, getaddrinfo, freaddrinfo, bind, connect, listen, accept,
+htons, hontl, ntohs, ntohl, inet_addr, inet_ntoa, send, recv, signal, sigaction, lseek, fstat, fcntl, poll (or equivalent)
+
+- socket: int soket(int domain, int type, int protocol)
+
+Permet de creer un nouveau socket -> "porte" de communication reseau. Elle retourne un descripteur de fichier positif pour le socket, sinon -1 si erreur.
+
+- close: int close(int fd)
+
+Ferme un descripteur de fichier. Si c'est un socket TCP, elle termine la connexion et libere les ressources.
+
+- setsockopt: int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen)
+
+Permet de configurer des options sur un socket
+
+- getsocketname: int getsockname(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
+
+Recupere l'adresse et le port associe au socket.
+
+- getprotobyname: struct protoent *getprotobyname(const char *name)
+
+Retourne la structure correspondant a un protocole reseau (tcp ou udp...)
+Peut etre utiliser pour remplir le parametre protocol de socket.
+
+- gethostbyname: struct hostent *gethostbyname(const char *name)
+
+Resout un nom de domaine en adresse IP. Obsolete en IPV6, remplacer par getaddrinfo.
+
+- getaddrinfo : int getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res)
+
+Resout un nom de domaine en adresse IP. Fonctionne pour IPV4 et IPV6.
+Donne une liste d'adresses et ports utilisables pour connect ou bind
+
+- freeaddreinfo: void freeaddrinfo(struct addrinfo *res)
+
+Libere la memoire alloue par getaddrinfo.
+
+- bind : int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
+
+Associe un socket a une adresse locale (IP + port).
+Exemple: Un serveur TCP doit bind sur 0.0.0.0:6667
+
+- connect : int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
+
+Pour un client TCP, se connecter a un serveur distant. 
+0 si succes, -1 si erreur.
+
+- listen: int listen(int sockfd, int backlog)
+
+Marque un socket TCP comme "pret a accepter des connexions entrantes". 
+backlok = nombre maximal de connexions en attente.
+
+- accept: int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
+
+Accepte une connexion entrante sur un socket TCP.
+Retour: nouveau descripteur pour la connexion avec le client.
+
+- htons/htonl: Convertir des entiers du format hote en format reseau.
+
+htons -> short (16 bits) et htonl -> long (32 bits)
+
+- ntohs/ntohl : Convertir du format reseau en format hote.
+
+- inet_addr: in_addr_t inet_addr(const char *cp)
+
+Convertit une chaine IPV4 "127.0.0.1" en un entier 32 bits.
+
+- inet_ntoa : char *inet_ntoa(struct in_addr in)
+
+Convertit une adresse IPV4 en chaine "127.0.0.1"
+
+- send : ssize_t send(int sockfd, const void *buf, size_t len, int flags)
+
+Envoie des donnees sur un socket TCP.
+Retourne le nombre d'octets envoyes.
+
+- recv: ssize_t recv(int sockfd, void *buf, size_t len, int flags)
+
+Recoit des donnees depuis un socket TCP.
+Retourne le nombre d'octets recus, 0 si la connexion est ferme.
+
+- signal/sigaction: permet de gerer les signaux etc..
+
+- lseek:  off_t lseek(int fd, off_t offset, int whence)
+
+Permet de deplacer le curseur de lecture/ecriture d'un fichier.
+Exemple: lseek(fd, 0, SEEK_SET) pour revenir au debut.
+
+- fstat: int fstat(int fd, struct stat *statbuf)
+
+Permet d'obtenir des informations sur un fichier(taille, type, permission..)
+
+- fcntl: int fcntl(int fd, int cmd, ... /* arg */ )
+
+Permet de controler un descripteur de fichier.
+
+- poll : int poll(struct pollfd *fds, nfds_t nfds, int timeout)
+
+Permet de surveiller plusieurs sockets/fichiers pour savoir s'ils sont prets a lire/ecrire.
+Retourne le nombre de sockets prets ou 0 si timeout.
+
+- select -> equivalent de poll, utiliser a l'examen je crois : int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)
+
+Permet de verifier quels descripteurs sont prets a lire, ecrire ou ont une exception.
+
+
+Qu'est-ce qu'un socket?
+
+Un socket est comme une 'prise reseau' virtuelle. C'est un point de communication qui permet a un programme d'envoyer ou de recevoir
+des donnees via un reseau (ou localement sur la machine).
+Cote serveur: le socket ecoute les connexions entrantes.
+Cote client: le socket se connecte a un serveur pour envoyer et recevoir des donnees.
+
+Exemple:
+Le serveur est un bureau avec un téléphone.
+Le client est un autre bureau avec un téléphone.
+Le socket est le téléphone :
+	Le serveur branche son téléphone (socket) sur une ligne (port + IP).
+	Le client compose le numéro du serveur (IP + port) pour établir la communication.
+Une fois la connexion établie, les deux programmes peuvent parler (envoyer et recevoir des messages).
+
+Types de sockets:
+	SOCK_STREAM pour un protocole TCP.
+	SOCK_DGRAM pour un protocole UDP.
+	SOCK_RAW pour un protocole IP.
+
+Pour envoyer un message a IRSSI, il faut que le message finisse par \r\n -> IRC suit la RFC 1459, qui definit un message IRC comme une ligne
+terminee par CRLF : 
+					CR = \r (carriage return)
+					LF = \n (Line feed)
+Comme ici lit les donnees du socket en continue, il faut qu'il sache ou commence et se termine un message.
+
+
+# Message ne s'affiche pas directement dans le channel
+# Si taille limite, ne doit pas ouvrir le channel pour retourner sur le menu principal
