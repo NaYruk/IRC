@@ -1,50 +1,76 @@
-# IRC Server
+<div align="center">
 
-A fully functional IRC (Internet Relay Chat) server implementation in C++98, compliant with RFC 1459 protocol specifications.
+# 💬 IRC Server
 
-## Overview
+*A fully functional IRC server implementation in C++98 compliant with RFC 1459*
 
-This project implements a multi-client IRC server capable of handling authentication, channels, private messaging, and various IRC commands. Built using socket programming and the `poll()` multiplexing system, it ensures efficient concurrent client management.
+![C++](https://img.shields.io/badge/C++-98-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)
+![Status](https://img.shields.io/badge/Status-Complete-success?style=for-the-badge)
 
-## Features
+</div>
+
+---
+
+## 📋 Overview
+
+A multi-client IRC server capable of handling authentication, channels, private messaging, and various IRC commands. Built using socket programming and the `poll()` multiplexing system for efficient concurrent client management.
+
+---
+
+## 🛠️ Technologies
+
+<div align="center">
+
+[![C++](https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
+[![Socket.io](https://img.shields.io/badge/Socket-Programming-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://en.wikipedia.org/wiki/Berkeley_sockets)
+[![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://www.linux.org/)
+[![Make](https://img.shields.io/badge/Make-Building-6D00CC?style=for-the-badge&logo=cmake&logoColor=white)](https://www.gnu.org/software/make/)
+
+**Key Concepts:** TCP/IP • Non-blocking I/O • Poll Multiplexing • RFC 1459 Protocol
+
+</div>
+
+---
+
+## ✨ Features
 
 ### Core Functionality
-- **Multi-client support** with non-blocking I/O operations
-- **Authentication system** with password protection
-- **Channel management** with operators and user privileges
-- **Private messaging** between users
-- **Real-time communication** using TCP sockets
+- Multi-client support with non-blocking I/O
+- Password-based authentication
+- Channel management with operators
+- Private messaging between users
+- Real-time communication via TCP sockets
 
-### Supported IRC Commands
+### Supported Commands
 
 | Command | Description |
 |---------|-------------|
-| `PASS` | Server password authentication |
-| `NICK` | Set or change nickname |
-| `USER` | Set username and realname |
+| `PASS` | Server authentication |
+| `NICK` | Set/change nickname |
+| `USER` | Set user information |
 | `JOIN` | Join a channel |
 | `PART` | Leave a channel |
-| `PRIVMSG` | Send private messages to users or channels |
-| `KICK` | Kick a user from a channel (operator only) |
-| `INVITE` | Invite a user to a channel |
-| `TOPIC` | View or change channel topic |
+| `PRIVMSG` | Send messages |
+| `KICK` | Kick user (operator) |
+| `INVITE` | Invite user to channel |
+| `TOPIC` | View/change topic |
 | `MODE` | Change channel modes |
-| `PING` | Keep-alive mechanism |
-| `QUIT` | Disconnect from server |
+| `PING` | Keep-alive |
+| `QUIT` | Disconnect |
 
 ### Channel Modes
-- **i** (invite-only): Channel requires invitation to join
-- **t** (topic restriction): Only operators can change the topic
-- **k** (password): Channel requires a password to join
-- **o** (operator): Grant/revoke channel operator privileges
-- **l** (user limit): Set maximum number of users in channel
+- `+i` - Invite-only
+- `+t` - Topic restriction (operators only)
+- `+k` - Password protected
+- `+o` - Operator privileges
+- `+l` - User limit
 
-### Bonus Feature
-- **IRC Bot**: An automated bot that sends humorous programming-related messages to channels at regular intervals
+### 🤖 Bonus
+An IRC bot that sends humorous programming messages to channels at regular intervals.
 
-## Architecture
+---
 
-The project follows an object-oriented design with clear separation of concerns:
+## 🏗️ Architecture
 
 ```
 .
@@ -54,141 +80,119 @@ The project follows an object-oriented design with clear separation of concerns:
 │   ├── Channel.hpp    # Channel management
 │   ├── Bot.hpp        # Bot implementation
 │   ├── ICommand.hpp   # Command interface
-│   └── *Command.hpp   # Individual command implementations
+│   └── *Command.hpp   # Command implementations
 │
-├── sources/           # Implementation files
-│   ├── Server.cpp     # Core server logic
-│   ├── Client.cpp     # Client handling
-│   ├── Channel.cpp    # Channel operations
-│   ├── Bot.cpp        # Bot behavior
-│   ├── *Command.cpp   # Command implementations
-│   └── main.cpp       # Entry point
+├── sources/           # Source files
+│   ├── Server.cpp
+│   ├── Client.cpp
+│   ├── Channel.cpp
+│   ├── Bot.cpp
+│   ├── *Command.cpp
+│   └── main.cpp
 │
-└── Makefile          # Build configuration
+└── Makefile
 ```
 
-### Design Patterns
-- **Command Pattern**: Each IRC command is encapsulated in its own class implementing the `ICommand` interface
-- **Singleton Pattern**: Server instance with signal handling
-- **Observer Pattern**: Broadcasting messages to channel members
+**Design Patterns:**
+- Command Pattern (encapsulated IRC commands)
+- Observer Pattern (message broadcasting)
 
-## Technical Implementation
+---
 
-### Socket Programming
-- TCP sockets with IPv4 (AF_INET)
-- Non-blocking I/O using `fcntl()` with `O_NONBLOCK`
-- `poll()` for efficient multiplexing of multiple client connections
-- Proper signal handling (SIGINT, SIGTERM)
+## 🚀 Usage
 
-### Memory Management
-- RAII principles with proper resource cleanup
-- No memory leaks (all allocated resources are freed in destructors)
-- Exception-safe allocation in constructors
-
-### Protocol Compliance
-- Messages terminated with `\r\n` (CRLF) as per RFC 1459
-- Numeric replies for server responses
-- Proper error handling and client notifications
-
-## Building and Running
-
-### Prerequisites
-- C++ compiler with C++98 support (g++, clang++)
-- Make
-- Unix-like operating system (Linux, macOS)
-
-### Compilation
+### Build
 
 ```bash
 make
 ```
 
-This will compile the project and generate the `ircserv` executable.
-
-### Usage
+### Run
 
 ```bash
 ./ircserv <port> <password>
 ```
 
-**Parameters:**
-- `port`: Port number (1024-65535)
-- `password`: Server password for client authentication
-
 **Example:**
 ```bash
-./ircserv 6667 mySecretPassword
+./ircserv 6667 myPassword
 ```
 
-### Connecting with an IRC Client
+### Connect
 
-You can connect to the server using any standard IRC client (e.g., IRSSI, WeeChat, HexChat):
+Using any IRC client (IRSSI, WeeChat, HexChat):
 
 ```bash
-# Using IRSSI
-irssi -c localhost -p 6667 -w mySecretPassword
+irssi -c localhost -p 6667 -w myPassword
+```
 
-# Using netcat for testing
+Or with netcat:
+```bash
 nc localhost 6667
-PASS mySecretPassword
+PASS myPassword
 NICK alice
-USER alice 0 * :Alice Wonder
+USER alice 0 * :Alice
 JOIN #general
 ```
 
-## Development
+---
+
+## 🔧 Technical Details
+
+### Socket Programming
+- TCP sockets with IPv4 (`AF_INET`)
+- Non-blocking I/O (`fcntl` with `O_NONBLOCK`)
+- `poll()` for multiplexing connections
+- Signal handling (`SIGINT`, `SIGTERM`)
+
+### Memory Management
+- RAII principles
+- No memory leaks
+- Exception-safe allocation
+
+### Protocol
+- RFC 1459 compliant
+- Messages terminated with `\r\n` (CRLF)
+- Numeric replies for server responses
+
+---
+
+## 📝 Development
+
+### Make Commands
+- `make` - Build project
+- `make clean` - Remove objects
+- `make fclean` - Remove all generated files
+- `make re` - Rebuild
 
 ### Compilation Flags
 ```
 -Wall -Wextra -Werror -std=c++98
 ```
 
-### Available Make Targets
-- `make` or `make all`: Build the project
-- `make clean`: Remove object files
-- `make fclean`: Remove object files and executable
-- `make re`: Clean and rebuild
+### Constraints
+- **Language:** C++98
+- **Allowed:** socket, close, setsockopt, bind, connect, listen, accept, send, recv, poll, fcntl, signal
+- **Forbidden:** fork, threads, boost
 
-### Testing
-Test the server with multiple clients simultaneously to verify:
-- Concurrent connection handling
-- Message broadcasting in channels
-- Private messaging
-- Channel modes and operator commands
-- Authentication system
-- Bot functionality
+---
 
-## Project Constraints
+## 👥 Authors
 
-- **Language**: C++98 standard
-- **Allowed Functions**: socket, close, setsockopt, getsockname, getprotobyname, gethostbyname, getaddrinfo, freeaddrinfo, bind, connect, listen, accept, htons, htonl, ntohs, ntohl, inet_addr, inet_ntoa, send, recv, signal, sigaction, lseek, fstat, fcntl, poll
-- **Forbidden**: fork, threads, boost libraries
+<div align="center">
 
-## Error Handling
+Made with ❤️ by
 
-The server handles various error scenarios:
-- Invalid port numbers
-- Socket creation failures
-- Client disconnections
-- Invalid commands or syntax
-- Permission errors (non-operators trying restricted actions)
-- Resource allocation failures
+**[@mmilliot](https://github.com/mmilliot)** & **[@mcotonea](https://github.com/mcotonea42)**
 
-## Future Improvements
+</div>
 
-Potential enhancements:
-- SSL/TLS support for encrypted connections
-- File transfer capabilities (DCC)
-- User registration and authentication database
-- Channel persistence
-- More sophisticated bot commands
-- IPv6 support
-- Server-to-server linking
+---
 
-## Author
+<div align="center">
 
-Developed as part of the 42 School curriculum.
+### ⭐ If you found this project useful, please consider giving it a star!
 
-## License
+**Happy coding!** 🎉
 
-This project is part of an educational curriculum and is intended for learning purposes.
+</div>
